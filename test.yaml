@@ -1,0 +1,6 @@
+adapter: postgres
+pool: 5
+timeout: 5000
+username: gasman
+password: gasman_test
+database: gasman_dev
