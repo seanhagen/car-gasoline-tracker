@@ -1,19 +1,18 @@
 package main
 
 import (
-	"io"
+	"database/sql"
 	"fmt"
+	"github.com/gchaincl/dotsql"
+	"github.com/julienschmidt/httprouter"
+	"io"
 	"log"
 	"net/http"
-	"github.com/julienschmidt/httprouter"
-	"database/sql"
-
-	_ "github.com/lib/pq"
 )
 
-func test(db *sql.DB) httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params){
-		loc, err := loadLocation(db, "5036 Hasting")
+func test(db *sql.DB, dot *dotsql.DotSql) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		loc, err := loadLocation(db, dot, "5036 Hasting")
 
 		if err != nil {
 			fmt.Printf("Error loading location: %#v\n", err)
@@ -21,13 +20,13 @@ func test(db *sql.DB) httprouter.Handle {
 		}
 
 		io.WriteString(w, loc.Name)
-		// fmt.Printf("%#v\n", loc)
+		fmt.Printf("%#v\n", loc)
 	}
 }
 
-func testParam(db *sql.DB) httprouter.Handle {
+func testParam(db *sql.DB, dot *dotsql.DotSql) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		loc, err := loadLocation(db, ps.ByName("address"))
+		loc, err := loadLocation(db, dot, ps.ByName("address"))
 
 		if err != nil {
 			fmt.Printf("Error loading location: %#v\n", err)
@@ -38,14 +37,10 @@ func testParam(db *sql.DB) httprouter.Handle {
 	}
 }
 
-func server(db *sql.DB) {
-	// mux := http.NewServeMux()
-	// mux.HandleFunc("/", test(db))
-	// http.ListenAndServe(":8000", mux)
-
+func server(db *sql.DB, dot *dotsql.DotSql) {
 	router := httprouter.New()
-	router.GET("/", test(db))
-	router.GET("/test/:address", testParam(db))
+	router.GET("/", test(db, dot))
+	router.GET("/test/:address", testParam(db, dot))
 
 	log.Fatal(http.ListenAndServe(":8000", router))
 }

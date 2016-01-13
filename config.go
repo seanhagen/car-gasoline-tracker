@@ -17,7 +17,13 @@ type Config struct {
 	Database string
 }
 
-func loadDBConnectionString() (string) {
+var config *Config
+
+func loadConfig() *Config {
+	if config != nil {
+		return config
+	}
+
 	filename, _ := filepath.Abs("./test.yaml")
 	yamlFile, err := ioutil.ReadFile(filename)
 
@@ -25,13 +31,16 @@ func loadDBConnectionString() (string) {
 		panic(err)
 	}
 
-	var config Config
-
 	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
 		panic(err)
 	}
 
+	return config
+}
+
+func loadDBConnectionString() string {
+	config := loadConfig()
 	var buffer bytes.Buffer
 
 	buffer.WriteString("user=")

@@ -2,18 +2,39 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 
+	"github.com/gchaincl/dotsql"
+	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 )
 
-var db sql.DB
+type EnvConfig struct {
+	Confpath string
+}
 
 func main() {
-	db, err := sql.Open("postgres", loadDBConnectionString())
-
+	var conf EnvConfig
+	err := envconfig.Process("gasapp", &conf)
 	if err != nil {
+		log.Fatal(err.Error())
 		panic(err)
 	}
 
-	server(db)
+	fmt.Printf("envconfig: %#v\n\n", conf)
+
+	db, err := sql.Open("postgres", loadDBConnectionString())
+	if err != nil {
+		log.Fatal(err.Error())
+		panic(err)
+	}
+
+	dot, err := dotsql.LoadFromFile("db/queries.sql")
+	if err != nil {
+		log.Fatal(err.Error())
+		panic(err)
+	}
+
+	server(db, dot)
 }
