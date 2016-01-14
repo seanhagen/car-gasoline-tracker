@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Config struct {
+type DbConfig struct {
 	Adapter  string `yaml:"adapter,omitempty"`
 	Pool     int
 	Timeout  int
@@ -17,30 +17,48 @@ type Config struct {
 	Database string
 }
 
-var config *Config
+type GoogleApiConfig struct {
+	Key string
+}
 
-func loadConfig() *Config {
-	if config != nil {
-		return config
-	}
+var dbconfig *DbConfig
+var apiconfig *GoogleApiConfig
 
-	filename, _ := filepath.Abs("./test.yaml")
+func loadConfigFromYAML(file string) []byte {
+	filename, _ := filepath.Abs(file)
 	yamlFile, err := ioutil.ReadFile(filename)
-
 	if err != nil {
 		panic(err)
 	}
+	return yamlFile
+}
 
-	err = yaml.Unmarshal(yamlFile, &config)
+func loadDbConfig() *DbConfig {
+	if dbconfig != nil {
+		return dbconfig
+	}
+	bytes := loadConfigFromYAML("./config/db.yml")
+	err := yaml.Unmarshal(bytes, &dbconfig)
 	if err != nil {
 		panic(err)
 	}
+	return dbconfig
+}
 
-	return config
+func loadGoogleApiConfig() *GoogleApiConfig {
+	if apiconfig != nil {
+		return apiconfig
+	}
+	bytes := loadConfigFromYAML("./config/api.yml")
+	err := yaml.Unmarshal(bytes, &apiconfig)
+	if err != nil {
+		panic(err)
+	}
+	return apiconfig
 }
 
 func loadDBConnectionString() string {
-	config := loadConfig()
+	config := loadDbConfig()
 	var buffer bytes.Buffer
 
 	buffer.WriteString("user=")
