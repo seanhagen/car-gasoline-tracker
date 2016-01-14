@@ -14,8 +14,9 @@ type EnvConfig struct {
 	Confpath string
 }
 
+var conf EnvConfig
+
 func main() {
-	var conf EnvConfig
 	err := envconfig.Process("gasapp", &conf)
 	if err != nil {
 		log.Fatal(err.Error())
