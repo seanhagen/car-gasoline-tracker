@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -55,8 +54,6 @@ type (
 )
 
 func getAddressGeo(address string) *Address {
-	config := loadGoogleApiConfig()
-
 	var Url *url.URL
 	Url, err := url.Parse(GoogleMapsApi)
 	if err != nil {
@@ -66,7 +63,7 @@ func getAddressGeo(address string) *Address {
 	Url.Path += GoogleMapsPath
 
 	parameters := url.Values{}
-	parameters.Add("key", config.Key)
+	parameters.Add("key", *googleMapsApiKey)
 	parameters.Add("address", address)
 	Url.RawQuery = parameters.Encode()
 

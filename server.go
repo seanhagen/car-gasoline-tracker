@@ -1,21 +1,52 @@
 package main
 
 import (
-	"database/sql"
-	"github.com/gchaincl/dotsql"
+	"fmt"
+	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
+	"github.com/justinas/alice"
+	"github.com/rs/cors"
+	"github.com/unrolled/render"
 	"log"
 	"net/http"
+	"strconv"
 )
 
-func server(db *sql.DB, dot *dotsql.DotSql) {
+func server() {
+	// get database connection and queries
+	db, dot := getDbQuery()
+
 	router := httprouter.New()
+	render := render.New(render.Options{
+		IndentJSON: true,
+	})
+	setcontext := makeSetContextMiddleware(render, db, dot)
 
-	//router.GET("/locations", listLocations(db, dot))
-	//router.GET("/locations/:id", fetchLocation(db, dot))
-	router.GET("/locations/search/:address", searchLocation(db, dot))
+	corHandler := cors.New(
+		cors.Options{
+			AllowedOrigins:   []string{"*"},
+			AllowCredentials: true,
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+			AllowedHeaders:   []string{"X-Auth-Token", "Accept", "Content-Type"},
+			ExposedHeaders:   []string{"X-Auth-Token"},
+		},
+	)
 
-	//router.POST("/locations", createLocation(db, dot))
+	handlers := alice.New(setcontext, TokenAuth, context.ClearHandler, Log, corHandler.Handler)
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	router.GET("/locations", locationsList())
+	router.GET("/locations/:id", locationsFetch())
+	router.POST("/locations", locationsCreate())
+	router.PUT("/locations/:id", locationsUpdate())
+	router.DELETE("/locations/:id", locationsDelete())
+
+	router.GET("/records", recordsList())
+	router.GET("/records/:id", recordsFetch())
+	router.POST("/records", recordsCreate())
+	router.PUT("/records/:id", recordsUpdate())
+	router.DELETE("/records/:id", recordsDelete())
+
+	port := ":" + strconv.Itoa(*serverPortFlag)
+	fmt.Printf("Starting server on port %#v\n", port)
+	log.Fatal(http.ListenAndServe(port, handlers.Then(router)))
 }

@@ -1,41 +1,16 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
-
-	"github.com/gchaincl/dotsql"
-	"github.com/kelseyhightower/envconfig"
-	_ "github.com/lib/pq"
+	"github.com/vharitonsky/iniflags"
 )
 
-type EnvConfig struct {
-	Confpath string
-}
-
-var conf EnvConfig
-
 func main() {
-	err := envconfig.Process("gasapp", &conf)
-	if err != nil {
-		log.Fatal(err.Error())
-		panic(err)
-	}
+	// set up recovery
+	defer recoverPanic()
 
-	fmt.Printf("envconfig: %#v\n\n", conf)
+	// intialize flags
+	iniflags.Parse()
 
-	db, err := sql.Open("postgres", loadDBConnectionString())
-	if err != nil {
-		log.Fatal(err.Error())
-		panic(err)
-	}
-
-	dot, err := dotsql.LoadFromFile("db/queries.sql")
-	if err != nil {
-		log.Fatal(err.Error())
-		panic(err)
-	}
-
-	server(db, dot)
+	// start web server
+	server()
 }
