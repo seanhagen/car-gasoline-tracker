@@ -46,7 +46,7 @@ func recordsUpdate() httprouter.Handle {
 	}
 }
 
-func recordsDelete() httprouter.Handle {
+func recordtsDelete() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		ce := context.Get(r, "extras")
 		retval := SkeletonMessage{Message: "Yup, it's been deleted"}
