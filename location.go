@@ -11,12 +11,14 @@ import (
 )
 
 type Location struct {
-	GUID      string
+	UUID      string
 	Address   string // street address
 	Longitude float64
 	Latitude  float64
 	Name      string // "brand" ?
 	Visits    uint32 // how many times this location has been visited
+	_saved    bool
+	_changed  bool
 }
 
 func loadLocation(db *sql.DB, dot *dotsql.DotSql, address string) (*Location, error) {
