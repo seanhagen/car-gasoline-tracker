@@ -1,5 +1,10 @@
 package main
 
+import (
+	"database/sql"
+	"github.com/gorilla/context"
+)
+
 type Record struct {
 	UUID       string
 	LocationId string  // location of the gas station
@@ -9,5 +14,15 @@ type Record struct {
 	_saved     bool
 	_changed   bool
 }
+
+func (r *Record) create(r *http.Request) error {
+
+}
+
+func (r *Record) save(r *http.Request) error {
+
+}
+
+func (r *Record) fetch(uuid string, r *http.Request) error {
 
 }
