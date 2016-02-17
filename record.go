@@ -1,8 +1,9 @@
 package main
 
 import (
-	"database/sql"
-	"github.com/gorilla/context"
+	// "database/sql"
+	// "github.com/gorilla/context"
+	"net/http"
 )
 
 type Record struct {
@@ -11,18 +12,16 @@ type Record struct {
 	Odometer   uint32  // odometer reading when gas purchased
 	Liters     float32 // amount of gas purchased
 	Cost       uint16  // cost in cents
-	_saved     bool
-	_changed   bool
 }
 
-func (r *Record) create(r *http.Request) error {
-
+func (rec *Record) create(r *http.Request) error {
+	return nil
 }
 
-func (r *Record) save(r *http.Request) error {
-
+func (rec *Record) save(r *http.Request) error {
+	return nil
 }
 
-func (r *Record) fetch(uuid string, r *http.Request) error {
-
+func (rec *Record) fetch(uuid string, r *http.Request) error {
+	return nil
 }
