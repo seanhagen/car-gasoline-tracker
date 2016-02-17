@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"github.com/gchaincl/dotsql"
-	"github.com/gorilla/context"
-	"github.com/justinas/alice"
-	"github.com/unrolled/render"
+	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/gchaincl/dotsql"
+	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/gorilla/context"
+	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/justinas/alice"
+	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/unrolled/render"
 	"log"
 	"net/http"
 )

@@ -2,8 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"github.com/gchaincl/dotsql"
-	_ "github.com/lib/pq"
+	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/gchaincl/dotsql"
+	_ "github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/lib/pq"
 )
 
 func getDbQuery() (*sql.DB, *dotsql.DotSql) {
