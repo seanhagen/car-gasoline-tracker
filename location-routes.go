@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/gorilla/context"
-	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/julienschmidt/httprouter"
+	"github.com/gorilla/context"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
 

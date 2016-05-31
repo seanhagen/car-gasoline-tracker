@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/vharitonsky/iniflags"
+	"github.com/vharitonsky/iniflags"
 )
 
 func main() {

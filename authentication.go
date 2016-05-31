@@ -4,7 +4,7 @@
 package main
 
 import (
-	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/gorilla/context"
+	"github.com/gorilla/context"
 	"net/http"
 )
 

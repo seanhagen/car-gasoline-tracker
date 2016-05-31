@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/gchaincl/dotsql"
-	"github.com/seanhagen/gas-web/Godeps/_workspace/src/github.com/julienschmidt/httprouter"
+	"github.com/gchaincl/dotsql"
+	"github.com/julienschmidt/httprouter"
 	"io"
 	"net/http"
 	"strconv"
