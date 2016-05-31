@@ -43,22 +43,6 @@ vet:
 
 deps:
 	godep go install
-	# go get golang.org/x/tools/cmd/vet
-	# go get golang.org/x/tools/cmd/cover
-	# go get github.com/golang/lint/golint
-	# go get bitbucket.org/tebeka/go2xunit
-	# go get github.com/gchaincl/dotsql
-	# go get github.com/gorilla/context
-	# go get github.com/julienschmidt/httprouter
-	# go get github.com/justinas/alice
-	# go get github.com/lib/pq
-	# go get github.com/rs/cors
-	# go get github.com/satori/go.uuid
-	# go get github.com/seanhagen/ldap
-	# go get github.com/unrolled/render
-	# go get github.com/vharitonsky/iniflags
-	# go get github.com/go-gomail/gomail
-	# go get github.com/t-yuki/gocover-cobertura
 
 all: deps generate $(BINARY) test vet
 
