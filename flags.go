@@ -6,7 +6,8 @@ import (
 
 var (
 	// http stuff
-	serverPortFlag = flag.Int("server-port", 8080, "Port to run web server on")
+	serverPortFlag    = flag.Int("server-port", 8080, "Port to run web server on")
+	serverAddressFlag = flag.String("server-addr", "127.0.0.1", "Address to listen on")
 
 	// database stuff
 	databaseConnectionString = flag.String(
@@ -20,5 +21,4 @@ var (
 		"key-goes-here",
 		"Google Maps API key",
 	)
-
 )

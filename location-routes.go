@@ -1,10 +1,19 @@
 package main
 
 import (
+	"github.com/cloudfoundry-community/go-cfenv"
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
+
+func index() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+		appEnv, _ := cfenv.Current()
+		ce := context.Get(r, "extras")
+		ce.(Extra).render.JSON(w, http.StatusOK, appEnv.Services)
+	}
+}
 
 func locationsCreate() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

@@ -9,10 +9,15 @@ import (
 	"github.com/unrolled/render"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
 func server() {
+	// get cloudfoundry env
+
+	// appEnv, _ := cfenv.Current()
+
 	// get database connection and queries
 	db, dot := getDbQuery()
 
@@ -34,6 +39,8 @@ func server() {
 
 	handlers := alice.New(setcontext, TokenAuth, context.ClearHandler, Log, corHandler.Handler)
 
+	router.GET("/", index())
+
 	router.GET("/locations", locationsList())
 	router.GET("/locations/:id", locationsFetch())
 	router.POST("/locations", locationsCreate())
@@ -46,7 +53,19 @@ func server() {
 	router.PUT("/records/:id", recordsUpdate())
 	router.DELETE("/records/:id", recordsDelete())
 
-	port := ":" + strconv.Itoa(*serverPortFlag)
-	fmt.Printf("Starting server on port %#v\n", port)
-	log.Fatal(http.ListenAndServe(port, handlers.Then(router)))
+	var addr string
+	var port string
+
+	if addr = os.Getenv("HOST"); len(addr) == 0 {
+		addr = *serverAddressFlag
+	}
+	if port = os.Getenv("PORT"); len(port) == 0 {
+		port = strconv.Itoa(*serverPortFlag)
+	}
+
+	listen := addr + ":" + port
+
+	fmt.Printf("Starting server on %#v\n", listen)
+
+	log.Fatal(http.ListenAndServe(listen, handlers.Then(router)))
 }
