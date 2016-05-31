@@ -1,0 +1,65 @@
+{
+	"ImportPath": "github.com/seanhagen/gas-web",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v63",
+	"Deps": [
+		{
+			"ImportPath": "github.com/cloudfoundry-community/go-cfenv",
+			"Comment": "v1.14.0",
+			"Rev": "96ad7376813bfd13c95af69ca5b4ef5725f6b335"
+		},
+		{
+			"ImportPath": "github.com/gchaincl/dotsql",
+			"Comment": "v0.1.0-10-g450d80a",
+			"Rev": "450d80a4d8f8cdd41842a1a3fe9ace90089c5e47"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "1c83b3eabd45b6d76072b66b746c20815fb2872d"
+		},
+		{
+			"ImportPath": "github.com/julienschmidt/httprouter",
+			"Comment": "v1.1-14-g21439ef",
+			"Rev": "21439ef4d70ba4f3e2a5ed9249e7b03af4019b40"
+		},
+		{
+			"ImportPath": "github.com/justinas/alice",
+			"Rev": "82db91fe6d1db4c070fed544cb5d0b5cc08fe276"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "go1.0-cutoff-60-gffe986a",
+			"Rev": "ffe986aba3e6cfcded8b06615965941408891ef0"
+		},
+		{
+			"ImportPath": "github.com/lib/pq/oid",
+			"Comment": "go1.0-cutoff-60-gffe986a",
+			"Rev": "ffe986aba3e6cfcded8b06615965941408891ef0"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/mapstructure",
+			"Rev": "d2dd0262208475919e1a362f675cfc0e7c10e905"
+		},
+		{
+			"ImportPath": "github.com/rs/cors",
+			"Rev": "ceb1fbf238d7711a11a86a2622d0b85305348aeb"
+		},
+		{
+			"ImportPath": "github.com/rs/xhandler",
+			"Rev": "d9d9599b6aaf6a058cb7b1f48291ded2cbd13390"
+		},
+		{
+			"ImportPath": "github.com/unrolled/render",
+			"Rev": "40a2dfa24398d37b4a14938442a0f4fe4307b929"
+		},
+		{
+			"ImportPath": "github.com/vharitonsky/iniflags",
+			"Comment": "v.1.0-28-g02b57ef",
+			"Rev": "02b57ef987a5ee59eedc7dcd93315a43f6dcc4a7"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "21c3935a8fc0f954d03e6b8a560c9600ffee38d2"
+		}
+	]
+}
