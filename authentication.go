@@ -13,7 +13,7 @@ func TokenAuth(h http.Handler) http.Handler {
 		// get token from header
 		//auth := r.Header.Get("X-Auth-Token")
 
-		// if token doesn't exist, set header to 400 ( or whatever the code for 'unauthrozied' is )
+		// if token doesn't exist, set header to 400 ( or whatever the code for 'unauthorized' is )
 
 		// fetch the user information from auth service based on token
 
