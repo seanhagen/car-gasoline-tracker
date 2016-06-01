@@ -6,7 +6,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
 	"github.com/rs/cors"
-	"github.com/unrolled/render"
+	//"github.com/unrolled/render"
 	"log"
 	"net/http"
 	"os"
@@ -14,18 +14,18 @@ import (
 )
 
 func server() {
-	// get cloudfoundry env
+	mq := getMQConn()
+	defer mq.Close()
 
-	// appEnv, _ := cfenv.Current()
+	ch, err := mq.Channel()
+	failOnError(err, "Failed to open a channel")
+	defer ch.Close()
 
-	// get database connection and queries
-	db, dot := getDbQuery()
+	queue, err := ch.QueueDeclare("hello", false, false, false, false, nil)
+	failOnError(err, "Failed to declare a queue")
 
 	router := httprouter.New()
-	render := render.New(render.Options{
-		IndentJSON: true,
-	})
-	setcontext := makeSetContextMiddleware(render, db, dot)
+	setcontext := makeSetContextMiddleware(ch, queue)
 
 	corHandler := cors.New(
 		cors.Options{
@@ -39,7 +39,11 @@ func server() {
 
 	handlers := alice.New(setcontext, TokenAuth, context.ClearHandler, Log, corHandler.Handler)
 
-	router.GET("/", index())
+	router.ServeFiles("/static/*filepath", http.Dir("static"))
+	router.GET("/", indexRoute())
+	router.GET("/appenv", appenvRoute())
+	router.GET("/queue/:word", postToQueue())
+	router.GET("/ws", websocketRoute())
 
 	router.GET("/locations", locationsList())
 	router.GET("/locations/:id", locationsFetch())
@@ -63,7 +67,7 @@ func server() {
 		port = strconv.Itoa(*serverPortFlag)
 	}
 
-	listen := addr + ":" + port
+	listen := ":" + port // addr + ":" + port
 
 	fmt.Printf("Starting server on %#v\n", listen)
 
