@@ -7,7 +7,12 @@ import (
 )
 
 func getDbQuery() (*sql.DB, *dotsql.DotSql) {
-	db, err := sql.Open("postgres", *databaseConnectionString)
+	connString := getServiceURI("elephantsql")
+	if len(connString) == 0 {
+		connString = *databaseConnectionString
+	}
+
+	db, err := sql.Open("postgres", connString)
 	if err != nil {
 		panic(err)
 	}
