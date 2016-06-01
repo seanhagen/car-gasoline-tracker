@@ -11,9 +11,15 @@ var (
 
 	// database stuff
 	databaseConnectionString = flag.String(
-		"db-conn-string",
+		"dburi",
 		"postgres://gasman:gasman_test@localhost/gasman_dev",
 		"Database connection string",
+	)
+
+	rabbitmqConnectionString = flag.String(
+		"rabbitmquri",
+		"amqp://guest:guest@localhost:5672/",
+		"RabbitMQ connection string",
 	)
 
 	googleMapsApiKey = flag.String(
