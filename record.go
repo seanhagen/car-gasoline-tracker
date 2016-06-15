@@ -1,8 +1,10 @@
 package main
 
 import (
-	"database/sql"
+	"encoding/json"
 	"github.com/gorilla/context"
+	"github.com/satori/go.uuid"
+	"net/http"
 )
 
 type Record struct {
@@ -12,16 +14,47 @@ type Record struct {
 	Liters       float32 // amount of gas purchased
 	Cost         uint16  // cost in cents
 }
+
+func (rec *Record) build(r *http.Request) error {
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(rec)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (r *Record) create(r *http.Request) error {
+func (rec *Record) create(r *http.Request) error {
+	ce := context.Get(r, "extras")
 
+	rec.UUID = uuid.NewV4().String()
+
+	_, err := ce.(Extra).dot.Exec(
+		ce.(Extra).db,
+		"create-notification",
+		rec.UUID,
+		rec.LocationUUID,
+		rec.Odometer,
+		rec.Liters,
+		rec.Cost,
+	)
+
+	return err
 }
 
-func (r *Record) save(r *http.Request) error {
-
+func (rec *Record) update(r *http.Request) error {
+	return nil
 }
 
-func (r *Record) fetch(uuid string, r *http.Request) error {
+func (rec *Record) fetch(uuid string, r *http.Request) error {
+	ce := context.Get(r, "extras")
+	row, err := ce.(Extra).dot.QueryRow(
+		ce.(Extra).db,
+		"fetch-notification",
+		uuid,
+	)
 
+	row.Scan(&rec.LocationUUID)
+
+	return err
 }
