@@ -31,7 +31,7 @@ func loadLocation(db *sql.DB, dot *dotsql.DotSql, address string) (*Location, er
 
 	var loc Location
 
-	err = row.Scan(&loc.GUID, &loc.Name, &loc.Longitude, &loc.Latitude, &loc.Address, &loc.Visits)
+	err = row.Scan(&loc.UUID, &loc.Name, &loc.Longitude, &loc.Latitude, &loc.Address, &loc.Visits)
 
 	switch {
 	case err == sql.ErrNoRows:
