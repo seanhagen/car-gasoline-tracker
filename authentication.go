@@ -4,29 +4,77 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/context"
 	"net/http"
 )
 
-func TokenAuth(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// get token from header
-		//auth := r.Header.Get("X-Auth-Token")
+type user struct {
+	UUID     string
+	Username string
+}
 
-		// if token doesn't exist, set header to 400 ( or whatever the code for 'unauthrozied' is )
+var (
+	// NONE No authentication needed for a route
+	NONE = 1 << 0
+	// UTOKEN Checks the X-Auth-Token against the Auth service to validate
+	UTOKEN = 1 << 1
+	// SUPERUSER Checks the user against the superuser method in the Auth service
+	SUPERUSER = 1 << 2
+)
 
-		// fetch the user information from auth service based on token
+var authTypes = map[string]int{
+	"none":   NONE,
+	"utoken": UTOKEN,
+	"su":     SUPERUSER,
+}
 
-		// find or create user
-		u := User{
-			UUID:     "2a7c7819-39c3-4c19-9479-3e69db522802",
-			Username: "shagen",
-		}
+func tokenAuth(routes RouteMap) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			route := routes[r.URL.Path][r.Method]
+			fmt.Printf("Got route: %#v ( url: %#v )", route, r.URL)
 
-		// set 'user' context to that user
-		context.Set(r, "user", u)
+			switch route.AuthType {
+			case NONE:
+				h.ServeHTTP(w, r)
+				return
+			case UTOKEN:
+				authUserToken(h, w, r)
+				return
+			case SUPERUSER:
+				superuserAuth(h, w, r)
+				return
+			}
 
-		// continue down middleware chain
-		h.ServeHTTP(w, r)
-	})
+			// continue down middleware chain
+			h.ServeHTTP(w, r)
+		})
+	}
+}
+
+// superuserAuth validates the user against the Auth service /su route
+func superuserAuth(h http.Handler, w http.ResponseWriter, r *http.Request) {
+	h.ServeHTTP(w, r)
+}
+
+// authUserToken ...
+func authUserToken(h http.Handler, w http.ResponseWriter, r *http.Request) {
+	// get token from header
+	//auth := r.Header.Get("X-Auth-Token")
+
+	// if token doesn't exist, set header to 400 ( or whatever the code for 'unauthorized' is )
+
+	// fetch the user information from auth service based on token
+
+	// find or create user
+	u := user{
+		UUID:     "2a7c7819-39c3-4c19-9479-3e69db522802",
+		Username: "shagen",
+	}
+
+	// set 'user' context to that user
+	context.Set(r, "user", u)
+
+	h.ServeHTTP(w, r)
 }
