@@ -2,3 +2,6 @@
 /app
 /gasweb
 /.google-api-key
+/coverage.xml
+/out.cov
+/tests.xml
