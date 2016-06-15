@@ -6,14 +6,6 @@ import (
 	"net/http"
 )
 
-func recordsCreate() httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
-		msg := SkeletonMessage{Message: "Yup, created!"}
-		ce.(Extra).render.JSON(w, http.StatusOK, msg)
-	}
-}
-
 func recordsList() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		ce := context.Get(r, "extras")
@@ -35,6 +27,14 @@ func recordsFetch() httprouter.Handle {
 		ce := context.Get(r, "extras")
 		retval := SkeletonMessage{Message: "This is definitely a record"}
 		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+	}
+}
+
+func recordsCreate() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+		ce := context.Get(r, "extras")
+		msg := SkeletonMessage{Message: "Yup, created!"}
+		ce.(Extra).render.JSON(w, http.StatusOK, msg)
 	}
 }
 

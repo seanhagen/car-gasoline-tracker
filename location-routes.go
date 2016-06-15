@@ -3,20 +3,13 @@ package main
 import (
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
+	"github.com/unrolled/render"
 	"net/http"
 )
 
-func locationsCreate() httprouter.Handle {
+func locationsIndex() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
-		msg := SkeletonMessage{Message: "Yup, created!"}
-		ce.(Extra).render.JSON(w, http.StatusOK, msg)
-	}
-}
-
-func locationsList() httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		var list []SkeletonMessage = []SkeletonMessage{
 			SkeletonMessage{Message: "This is a thing"},
 			SkeletonMessage{Message: "This is a thing"},
@@ -26,30 +19,38 @@ func locationsList() httprouter.Handle {
 			SkeletonMessage{Message: "This is a thing"},
 			SkeletonMessage{Message: "This is a thing"},
 		}
-		ce.(Extra).render.JSON(w, http.StatusOK, list)
+		ren.JSON(w, http.StatusOK, list)
 	}
 }
 
-func locationsFetch() httprouter.Handle {
+func locationsGet() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		retval := SkeletonMessage{Message: "This is definitely a location"}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		ren.JSON(w, http.StatusOK, retval)
+	}
+}
+
+func locationsCreate() httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+		ren := context.Get(r, "render").(*render.Render)
+		msg := SkeletonMessage{Message: "Yup, created!"}
+		ren.JSON(w, http.StatusOK, msg)
 	}
 }
 
 func locationsUpdate() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		retval := SkeletonMessage{Message: "Yup, it's been updated"}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		ren.JSON(w, http.StatusOK, retval)
 	}
 }
 
 func locationsDelete() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		retval := SkeletonMessage{Message: "Yup, it's been deleted"}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		ren.JSON(w, http.StatusOK, retval)
 	}
 }
