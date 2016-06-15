@@ -3,12 +3,13 @@ package main
 import (
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
+	"github.com/unrolled/render"
 	"net/http"
 )
 
 func recordsList() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		var list []SkeletonMessage = []SkeletonMessage{
 			SkeletonMessage{Message: "This is a thing"},
 			SkeletonMessage{Message: "This is a thing"},
@@ -18,38 +19,38 @@ func recordsList() httprouter.Handle {
 			SkeletonMessage{Message: "This is a thing"},
 			SkeletonMessage{Message: "This is a thing"},
 		}
-		ce.(Extra).render.JSON(w, http.StatusOK, list)
+		ren.JSON(w, http.StatusOK, list)
 	}
 }
 
-func recordsFetch() httprouter.Handle {
+func recordsGet() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		retval := SkeletonMessage{Message: "This is definitely a record"}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		ren.JSON(w, http.StatusOK, retval)
 	}
 }
 
 func recordsCreate() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		msg := SkeletonMessage{Message: "Yup, created!"}
-		ce.(Extra).render.JSON(w, http.StatusOK, msg)
+		ren.JSON(w, http.StatusOK, msg)
 	}
 }
 
 func recordsUpdate() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		retval := SkeletonMessage{Message: "Yup, it's been updated"}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		ren.JSON(w, http.StatusOK, retval)
 	}
 }
 
 func recordsDelete() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
+		ren := context.Get(r, "render").(*render.Render)
 		retval := SkeletonMessage{Message: "Yup, it's been deleted"}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		ren.JSON(w, http.StatusOK, retval)
 	}
 }

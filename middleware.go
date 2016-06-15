@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-	"github.com/gchaincl/dotsql"
 	"github.com/gorilla/context"
 	"github.com/justinas/alice"
 	"github.com/unrolled/render"

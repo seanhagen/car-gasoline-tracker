@@ -21,12 +21,7 @@ func (d *Database) QueryRow(name string, args ...interface{}) (*sql.Row, error) 
 }
 
 func getDbQuery() *Database {
-	connString := getServiceURI("elephantsql")
-	if len(connString) == 0 {
-		connString = *databaseConnectionString
-	}
-
-	db, err := sql.Open("postgres", connString)
+	db, err := sql.Open("postgres", *databaseConnectionString)
 	if err != nil {
 		panic(err)
 	}

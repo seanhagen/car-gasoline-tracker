@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/gorilla/context"
+	//"github.com/gorilla/context"
 	"github.com/satori/go.uuid"
 	"net/http"
 )
@@ -25,21 +25,21 @@ func (rec *Record) build(r *http.Request) error {
 }
 
 func (rec *Record) create(r *http.Request) error {
-	ce := context.Get(r, "extras")
+	// ce := context.Get(r, "extras")
 
 	rec.UUID = uuid.NewV4().String()
 
-	_, err := ce.(Extra).dot.Exec(
-		ce.(Extra).db,
-		"create-notification",
-		rec.UUID,
-		rec.LocationUUID,
-		rec.Odometer,
-		rec.Liters,
-		rec.Cost,
-	)
+	// _, err := ce.(Extra).dot.Exec(
+	// 	ce.(Extra).db,
+	// 	"create-notification",
+	// 	rec.UUID,
+	// 	rec.LocationUUID,
+	// 	rec.Odometer,
+	// 	rec.Liters,
+	// 	rec.Cost,
+	// )
 
-	return err
+	return nil
 }
 
 func (rec *Record) update(r *http.Request) error {
@@ -47,14 +47,14 @@ func (rec *Record) update(r *http.Request) error {
 }
 
 func (rec *Record) fetch(uuid string, r *http.Request) error {
-	ce := context.Get(r, "extras")
-	row, err := ce.(Extra).dot.QueryRow(
-		ce.(Extra).db,
-		"fetch-notification",
-		uuid,
-	)
+	// ce := context.Get(r, "extras")
+	// row, err := ce.(Extra).dot.QueryRow(
+	// 	ce.(Extra).db,
+	// 	"fetch-notification",
+	// 	uuid,
+	// )
 
-	row.Scan(&rec.LocationUUID)
+	// row.Scan(&rec.LocationUUID)
 
-	return err
+	return nil
 }
