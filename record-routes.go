@@ -29,7 +29,7 @@ func recordsGet() httprouter.Handle {
 		ren := context.Get(r, "render").(*render.Render)
 		// retval := SkeletonMessage{Message: "This is definitely a record"}
 		// ren.JSON(w, http.StatusOK, retval)
-		rec := NewRecord(nil)
+		rec, _ := NewRecord(nil)
 		fmt.Printf("Record: %#v\n", rec)
 		rec.Create(r)
 		fmt.Printf("Record now: %#v\n", rec)
@@ -42,7 +42,7 @@ func recordsCreate() httprouter.Handle {
 		ren := context.Get(r, "render").(*render.Render)
 		// msg := SkeletonMessage{Message: "Yup, created!"}
 
-		rec := NewRecord(nil)
+		rec, _ := NewRecord(nil)
 		ren.JSON(w, http.StatusOK, rec.Create(r))
 	}
 }

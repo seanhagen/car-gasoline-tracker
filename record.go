@@ -18,34 +18,30 @@ type Record struct {
 	uuidGenFunc func() string
 }
 
-// There are two ways to get a Record: create a brand new one, or
-// load one from the database.
+// The ways to get a Record: create from scratch, build from request, load from db.
 
 // NewRecord creates a new not-yet-saved-to-the-database Record
 // that can be modified before saving.
-func NewRecord(uuidGen func() string) *Record {
+func NewRecord(uuidGen func() string) (*Record, error) {
 	if uuidGen == nil {
 		uuidGen = uuid.NewV4().String
 	}
 
 	return &Record{
 		uuidGenFunc: uuidGen,
-	}
+	}, nil
+}
+
+func BuildRecord(r *http.Request) (rec *Record, err error) {
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(rec)
+	return
 }
 
 // LoadRecord attempts to load a Record from the database using the
 // given UUID
-func LoadRecord(uuid string) *Record {
-	return &Record{}
-}
-
-func (rec *Record) build(r *http.Request) error {
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(rec)
-	if err != nil {
-		return err
-	}
-	return nil
+func LoadRecord(uuid string) (rec *Record, err error) {
+	return &Record{}, nil
 }
 
 func (rec *Record) Create(r *http.Request) error {
