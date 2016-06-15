@@ -25,7 +25,7 @@ LDFLAGS=-ldflags "-X ${REPO}/core.Version=${VERSION} -X ${REPO}/core.BuildTime=$
 .DEFAULT_GOAL: $(BINARY)
 .PHONY: clean generate test vet deps all
 
-$(BINARY): $(SOURCES) clean
+$(BINARY): $(SOURCES) clean test vet
 	godep go build ${LDFLAGS} -o ${BINARY}
 
 clean:
@@ -35,11 +35,10 @@ generate:
 	go generate
 
 test:
-	go test -v -coverprofile=out.cov -covermode atomic -cover ./... | go2xunit -output tests.xml
-	gocover-cobertura < out.cov > coverage.xml
+	go test -v  .
 
 vet:
-	go vet
+	go vet ./...
 
 deps:
 	godep save
