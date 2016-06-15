@@ -14,21 +14,18 @@ endif
 SOURCEDIR=.
 SOURCES := $(shell find $(SOURCEDIR) -type f -name '*.go')
 
-BINARY=app
+BINARY=gasweb
 
 VERSION=1.0.0
 BUILD_TIME=`date +%FT%T%z`
 
-REPO=github.com/ktrl.io/upload
+REPO=github.com/seanhagen/car-gasoline-tracker
 LDFLAGS=-ldflags "-X ${REPO}/core.Version=${VERSION} -X ${REPO}/core.BuildTime=${BUILD_TIME}"
 
 .DEFAULT_GOAL: $(BINARY)
-.PHONY: clean generate test vet deps all install
+.PHONY: clean generate test vet deps all
 
-install: $(BINARY)
-	godep go install ${LDFLAGS}
-
-$(BINARY): $(SOURCES) deps clean
+$(BINARY): $(SOURCES) clean
 	godep go build ${LDFLAGS} -o ${BINARY}
 
 clean:
@@ -46,6 +43,7 @@ vet:
 
 deps:
 	godep save
+	godep go install
 
 all: deps generate $(BINARY) test vet
 

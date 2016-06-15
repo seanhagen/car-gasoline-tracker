@@ -1,0 +1,10 @@
+applications:
+- path: .
+  memory: 128M
+  instances: 1
+  domain: mybluemix.net
+  name: seangotest
+  host: seangotest
+  disk_quota: 1024M
+  command: ./start.sh
+  buildpack: https://github.com/cloudfoundry/go-buildpack.git

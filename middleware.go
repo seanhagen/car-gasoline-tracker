@@ -10,12 +10,6 @@ import (
 	"net/http"
 )
 
-type Extra struct {
-	render *render.Render
-	db     *sql.DB
-	dot    *dotsql.DotSql
-}
-
 func makeContextMiddleware() alice.Constructor {
 	render := render.New(render.Options{
 		IndentJSON: true,

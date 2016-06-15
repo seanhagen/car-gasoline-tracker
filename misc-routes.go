@@ -3,14 +3,18 @@ package main
 import (
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
+	"html/template"
 	"net/http"
 )
 
+var index = template.Must(template.ParseFiles(
+	"templates/_base.html",
+	"templates/index.html",
+))
+
 func indexRoute() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-		ce := context.Get(r, "extras")
-		retval := SkeletonMessage{Message: "This should actually be the index page...."}
-		ce.(Extra).render.JSON(w, http.StatusOK, retval)
+		index.Execute(w, nil)
 	}
 }
 
