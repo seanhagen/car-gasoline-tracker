@@ -41,6 +41,13 @@ func BuildRecord(r *http.Request) (rec *Record, err error) {
 // LoadRecord attempts to load a Record from the database using the
 // given UUID
 func LoadRecord(uuid string) (rec *Record, err error) {
+	// row, err := ce.(Extra).dot.QueryRow(
+	// 	ce.(Extra).db,
+	// 	"fetch-notification",
+	// 	uuid,
+	// )
+
+	// row.Scan(&rec.LocationUUID)
 	return &Record{}, nil
 }
 
@@ -62,19 +69,10 @@ func (rec *Record) Create(r *http.Request) error {
 	return nil
 }
 
-func (rec *Record) update(r *http.Request) error {
+func (rec *Record) copy(o *Record) error {
 	return nil
 }
 
-func (rec *Record) fetch(uuid string, r *http.Request) error {
-	// ce := context.Get(r, "extras")
-	// row, err := ce.(Extra).dot.QueryRow(
-	// 	ce.(Extra).db,
-	// 	"fetch-notification",
-	// 	uuid,
-	// )
-
-	// row.Scan(&rec.LocationUUID)
-
+func (rec *Record) save() error {
 	return nil
 }
