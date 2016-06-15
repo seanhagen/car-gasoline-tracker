@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
 	"github.com/unrolled/render"
@@ -26,16 +27,23 @@ func recordsList() httprouter.Handle {
 func recordsGet() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		ren := context.Get(r, "render").(*render.Render)
-		retval := SkeletonMessage{Message: "This is definitely a record"}
-		ren.JSON(w, http.StatusOK, retval)
+		// retval := SkeletonMessage{Message: "This is definitely a record"}
+		// ren.JSON(w, http.StatusOK, retval)
+		rec := NewRecord(nil)
+		fmt.Printf("Record: %#v\n", rec)
+		rec.Create(r)
+		fmt.Printf("Record now: %#v\n", rec)
+		ren.JSON(w, http.StatusOK, rec)
 	}
 }
 
 func recordsCreate() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		ren := context.Get(r, "render").(*render.Render)
-		msg := SkeletonMessage{Message: "Yup, created!"}
-		ren.JSON(w, http.StatusOK, msg)
+		// msg := SkeletonMessage{Message: "Yup, created!"}
+
+		rec := NewRecord(nil)
+		ren.JSON(w, http.StatusOK, rec.Create(r))
 	}
 }
 

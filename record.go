@@ -8,11 +8,35 @@ import (
 )
 
 type Record struct {
-	UUID         string
-	LocationUUID string  // location of the gas station
-	Odometer     uint32  // odometer reading when gas purchased
-	Liters       float32 // amount of gas purchased
-	Cost         uint16  // cost in cents
+	UUID         string  `json:"uuid"`
+	LocationUUID string  `json:"location_uuid"` // location of the gas station
+	Odometer     uint32  `json:"odometer"`      // odometer reading when gas purchased
+	Liters       float32 `json:"liters"`        // amount of gas purchased
+	Cost         uint16  `json:"cost"`          // cost in cents
+
+	//private!
+	uuidGenFunc func() string
+}
+
+// There are two ways to get a Record: create a brand new one, or
+// load one from the database.
+
+// NewRecord creates a new not-yet-saved-to-the-database Record
+// that can be modified before saving.
+func NewRecord(uuidGen func() string) *Record {
+	if uuidGen == nil {
+		uuidGen = uuid.NewV4().String
+	}
+
+	return &Record{
+		uuidGenFunc: uuidGen,
+	}
+}
+
+// LoadRecord attempts to load a Record from the database using the
+// given UUID
+func LoadRecord(uuid string) *Record {
+	return &Record{}
 }
 
 func (rec *Record) build(r *http.Request) error {
@@ -24,10 +48,10 @@ func (rec *Record) build(r *http.Request) error {
 	return nil
 }
 
-func (rec *Record) create(r *http.Request) error {
+func (rec *Record) Create(r *http.Request) error {
 	// ce := context.Get(r, "extras")
 
-	rec.UUID = uuid.NewV4().String()
+	rec.UUID = rec.uuidGenFunc()
 
 	// _, err := ce.(Extra).dot.Exec(
 	// 	ce.(Extra).db,
