@@ -132,15 +132,15 @@ func server() {
 
 	routes["GET"]["/locations"] = CreateRoute(NONE, nil, locationsIndex)
 	routes["GET"]["/locations/:id"] = CreateRoute(NONE, nil, locationsGet)
-	routes["POST"]["/locations"] = CreateRoute(UTOKEN, nil, locationsCreate)
-	routes["PUT"]["/locations/:id"] = CreateRoute(UTOKEN, nil, locationsUpdate)
-	routes["DELETE"]["/locations/:id"] = CreateRoute(UTOKEN, nil, locationsDelete)
+	routes["POST"]["/locations"] = CreateRoute(TOKEN, nil, locationsCreate)
+	routes["PUT"]["/locations/:id"] = CreateRoute(TOKEN, nil, locationsUpdate)
+	routes["DELETE"]["/locations/:id"] = CreateRoute(TOKEN, nil, locationsDelete)
 
-	routes["GET"]["/records"] = CreateRoute(UTOKEN, nil, recordsList)
-	routes["GET"]["/records/:id"] = CreateRoute(UTOKEN, nil, recordsGet)
-	routes["POST"]["/records"] = CreateRoute(UTOKEN, nil, recordsCreate)
-	routes["PUT"]["/records/:id"] = CreateRoute(UTOKEN, nil, recordsUpdate)
-	routes["DELETE"]["/records/:id"] = CreateRoute(UTOKEN, nil, recordsDelete)
+	routes["GET"]["/records"] = CreateRoute(TOKEN, nil, recordsList)
+	routes["GET"]["/records/:id"] = CreateRoute(TOKEN, nil, recordsGet)
+	routes["POST"]["/records"] = CreateRoute(TOKEN, nil, recordsCreate)
+	routes["PUT"]["/records/:id"] = CreateRoute(TOKEN, nil, recordsUpdate)
+	routes["DELETE"]["/records/:id"] = CreateRoute(TOKEN, nil, recordsDelete)
 
 	// start the server!
 	router := CreateServer(routes)

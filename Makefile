@@ -25,7 +25,7 @@ LDFLAGS=-ldflags "-X ${REPO}/core.Version=${VERSION} -X ${REPO}/core.BuildTime=$
 .DEFAULT_GOAL: $(BINARY)
 .PHONY: clean generate test vet deps all
 
-$(BINARY): $(SOURCES) clean test vet
+$(BINARY): $(SOURCES) test
 	godep go build ${LDFLAGS} -o ${BINARY}
 
 clean:

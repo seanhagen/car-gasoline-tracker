@@ -7,9 +7,8 @@ import (
 )
 
 type Database struct {
-	dbq  dotsql.Queryer
-	dbqr dotsql.QueryRower
-	dot  *dotsql.DotSql
+	dbq dotsql.Queryer
+	dot *dotsql.DotSql
 }
 
 func (d *Database) Query(name string, args ...interface{}) (*sql.Rows, error) {

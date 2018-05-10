@@ -17,16 +17,16 @@ type user struct {
 var (
 	// NONE No authentication needed for a route
 	NONE = 1 << 0
-	// UTOKEN Checks the X-Auth-Token against the Auth service to validate
-	UTOKEN = 1 << 1
-	// SUPERUSER Checks the user against the superuser method in the Auth service
+	// TOKEN Checks the X-Auth-Token for a valid OAuth token
+	TOKEN = 1 << 1
+	// SUPERUSER Checks the user against the superuser method
 	SUPERUSER = 1 << 2
 )
 
 var authTypes = map[string]int{
-	"none":   NONE,
-	"utoken": UTOKEN,
-	"su":     SUPERUSER,
+	"none":  NONE,
+	"token": TOKEN,
+	"su":    SUPERUSER,
 }
 
 func tokenAuth(routes RouteMap) func(http.Handler) http.Handler {
@@ -39,8 +39,8 @@ func tokenAuth(routes RouteMap) func(http.Handler) http.Handler {
 			case NONE:
 				h.ServeHTTP(w, r)
 				return
-			case UTOKEN:
-				authUserToken(h, w, r)
+			case TOKEN:
+				authToken(h, w, r)
 				return
 			case SUPERUSER:
 				superuserAuth(h, w, r)
@@ -59,11 +59,15 @@ func superuserAuth(h http.Handler, w http.ResponseWriter, r *http.Request) {
 }
 
 // authUserToken ...
-func authUserToken(h http.Handler, w http.ResponseWriter, r *http.Request) {
+func authToken(h http.Handler, w http.ResponseWriter, r *http.Request) {
 	// get token from header
-	//auth := r.Header.Get("X-Auth-Token")
+	auth := r.Header.Get("X-Auth-Token")
 
 	// if token doesn't exist, set header to 400 ( or whatever the code for 'unauthorized' is )
+	if auth == "" {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 
 	// fetch the user information from auth service based on token
 
