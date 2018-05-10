@@ -1,0 +1,9 @@
+runtime: go
+env: flex
+service: gas-web
+
+readiness_check:
+  path: /_health
+
+env_variables:
+  GOOGLE_PROJECT=sean-gas-project
