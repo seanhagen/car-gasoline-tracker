@@ -35,20 +35,21 @@ LDFLAGSWITCH=-ldflags "$(LDFLAGS)"
 CONTAINER_TAG=gcr.io/biba-services/$(BINARY):$(VERSION)
 CONTAINER_LATEST_TAG=gcr.io/biba-services/$(BINARY):latest
 
-
 .DEFAULT_GOAL: $(OUTPUT)
 .PHONY: clean generate test vet deps all
 
+SQL_FILE=db/final.sql
 not-containing = $(foreach v,$2,$(if $(findstring $1,$v),,$v))
 LIST=$(wildcard db/queries/*.sql)
 QUERIES=$(call not-containing,final,$(LIST))
-db/final.sql: $(QUERIES)
-	cat $^ > db/final.sql
+$(SQL_FILE): $(QUERIES)
+	cat $^ > $@
 
-internal/files.go: config/ca-certificates.crt db/final.sql $(TEMPLATES)
+INTERNAL_FILE=internal/files.go
+$(INTERNAL_FILE): $(SQL_FILE) deploy/ca-certificates.crt $(TEMPLATES)
 	gotic -package internal $^ > $@
 
-$(OUTPUT): internal/files.go $(SOURCES)
+$(OUTPUT): $(INTERNAL_FILE) $(SOURCES)
 	$(GO_BUILD_ENV) go build -a ${LDFLAGSWITCH} -o ${OUTPUT} -installsuffix cgo .
 
 install:
@@ -56,7 +57,7 @@ install:
 
 clean:
 
-generate: internal/files.go db/final.sql
+generate: $(INTERNAL_FILE) $(SQL_FILE)
 	go generate
 
 test:
@@ -69,13 +70,10 @@ build: $(OUTPUT)
 
 build-clean: generate vet test build
 
-build-container: build
-	@echo "Building container using Google Container Builer"
-	@gcloud container builds submit --tag $(CONTAINER_TAG) .
-	@gcloud container images add-tag $(CONTAINER_TAG) $(CONTAINER_LATEST_TAG) --quiet
-	@echo "Done and tagged"
+deploy: clean build-clean
+	gcloud app deploy ./deploy
 
 clean:
-	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
-	if [ -f db/final.sql ] ; then rm db/final.sql ; fi
-	if [ -f internal/files.go ] ; then rm internal/files.go ; fi
+	if [ -f ${OUTPUT} ] ; then rm ${OUTPUT} ; fi
+	if [ -f $(SQL_FILE) ] ; then rm $(SQL_FILE) ; fi
+	if [ -f $(INTERNAL_FILE) ] ; then rm $(INTERNAL_FILE) ; fi

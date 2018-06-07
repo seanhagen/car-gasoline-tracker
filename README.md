@@ -23,3 +23,7 @@ GET /records - list records
 GET /records/:id - fetch a specific record
 
 POST /records - store the data from a receipt
+
+
+Postgres User Default Password
+8OdyJuxDsLdI6BJGTt7fzYaXnqJJzS

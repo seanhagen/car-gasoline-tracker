@@ -1,9 +1,25 @@
-runtime: go
+runtime: custom
 env: flex
-service: gas-web
-
-readiness_check:
-  path: /_health
 
 env_variables:
-  GOOGLE_PROJECT=sean-gas-project
+  GOOGLE_PROJECT: sean-gas-tracker
+  DB_URL: sean-gas-tracker:us-west1:fillup-logs
+  POSTGRES_CONNECTION: "user=postgres password=8OdyJuxDsLdI6BJGTt7fzYaXnqJJzS dbname=fillups host=/cloudsql/sean-gas-tracker:us-west1:fillup-logs"
+
+beta_settings:
+  cloud_sql_instances: sean-gas-tracker:us-west1:fillup-logs
+
+readiness_check:
+  path: /_ready
+  check_interval_sec: 100
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300
+
+liveness_check:
+  path: /_health
+  check_interval_sec: 300
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2

@@ -1,3 +1,11 @@
 development:
   driver: postgres
-  open: user=gasman password=gasman_test dbname=gasman_dev sslmode=disable
+  open: postgres://sean:secret@localhost:5432/fillup-logs?sslmode=disable
+
+staging:
+  driver: postgres
+  open: $DB_URL
+
+production:
+  driver: postgres
+  open: $DB_URL

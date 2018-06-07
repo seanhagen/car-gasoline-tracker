@@ -8,7 +8,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/seanhagen/gas-web/internal"
-	"github.com/seanhagen/gas-web/internal/app"
+	"github.com/seanhagen/gas-web/internal/routes/stations"
 )
 
 var (
@@ -28,7 +28,7 @@ var (
 	BuildTime string
 )
 
-func setupRouter(config app.IConfig) *gin.Engine {
+func setupRouter(config *internal.Config) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.ErrorLogger())
 	r.Use(gin.Recovery())
@@ -43,17 +43,21 @@ func setupRouter(config app.IConfig) *gin.Engine {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
-	r.GET("/_health", getBuildInfo(config))
-	r.GET("/v1/info", getBuildInfo(config))
+	r.GET("/", getBuildInfo(config))
+	r.GET("/_health", handleEverything)
+	r.GET("/_ready", handleEverything)
+
+	r.POST("/v1/stations", stations.Create(config))
+	r.POST("/v1/find-station", stations.Find(config))
 
 	r.GET("/v1/locations", handleEverything)
 	r.GET("/v1/locations/:id", handleEverything)
 	r.GET("/v1/location-by-address", handleEverything)
 	r.POST("/v1/locations", handleEverything)
 
-	r.GET("/records", handleEverything)
-	r.GET("/records/:id", handleEverything)
-	r.POST("/records", handleEverything)
+	r.GET("/v1/records", handleEverything)
+	r.GET("/v1/records/:id", handleEverything)
+	r.POST("/v1/records", handleEverything)
 
 	return r
 }
@@ -70,14 +74,14 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	err = r.Run(":" + config.Port())
+	err = r.Run(":" + config.Port)
 	if err != nil {
 		log.Panicf("Unable to start server: %v", err)
 	}
 }
 
 // getBuildInfo TODO
-func getBuildInfo(config app.IConfig) gin.HandlerFunc {
+func getBuildInfo(config *internal.Config) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		info := struct {
 			Version   string `json:"version"`
@@ -85,7 +89,7 @@ func getBuildInfo(config app.IConfig) gin.HandlerFunc {
 			AppName   string `json:"appname"`
 			Repo      string `json:"repo"`
 			BuildTime string `json:"build_time"`
-		}{Version, Build, config.AppName(), Repo, BuildTime}
+		}{Version, Build, config.AppName, Repo, BuildTime}
 
 		ctx.JSON(http.StatusOK, info)
 	}
